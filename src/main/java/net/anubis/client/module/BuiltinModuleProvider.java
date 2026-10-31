@@ -113,7 +113,6 @@ import net.anubis.client.module.impl.render.PearlTrajectoryModule;
 import net.anubis.client.module.impl.render.PharaohHeaddressModule;
 import net.anubis.client.module.impl.render.PrimeChunkFinderModule;
 import net.anubis.client.module.impl.render.RelicParticlesModule;
-import net.anubis.client.module.impl.render.ShaderEspModule;
 import net.anubis.client.module.impl.render.SpawnerNametagsModule;
 import net.anubis.client.module.impl.render.SpawnerNotifierModule;
 import net.anubis.client.module.impl.render.StorageEspModule;
@@ -224,7 +223,6 @@ public final class BuiltinModuleProvider implements ModuleProvider {
          new LightEspModule(),
          new FullbrightModule(),
          new EspModule(),
-         new ShaderEspModule(),
          new NametagsModule(),
          new SpawnerNametagsModule(),
          new BlockEspModule(),
