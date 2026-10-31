@@ -86,6 +86,7 @@ public final class HudRenderer {
    private final ArmorStatus armorStatus = new ArmorStatus();
    private final CooldownTray cooldownTray = new CooldownTray();
    private final Map<String, Int2ObjectOpenHashMap<StableWidth>> slots = new HashMap<>();
+   private final Map<Long, Float> capTops = new HashMap<>();
    private int slotCount;
    private float moduleListW;
    private float toastShift;
@@ -1861,6 +1862,28 @@ public final class HudRenderer {
    }
 
 
+   private float capTop(ImFont font, int px) {
+      if (font != null && !(font.getFontSize() <= 0.0F)) {
+         long key = (long)System.identityHashCode(font) << 16 ^ px;
+         Float cached = this.capTops.get(key);
+         if (cached != null) {
+            return cached;
+         }
+
+         ImFontGlyph glyph = font.findGlyphNoFallback(72);
+         float top = glyph.isValidPtr() ? glyph.getY0() * px / font.getFontSize() : px * 0.2F;
+         float value = Math.max(0.0F, Math.round(top));
+         if (this.capTops.size() > 64) {
+            this.capTops.clear();
+         }
+
+         this.capTops.put(key, value);
+         return value;
+      } else {
+         return Math.round(px * 0.2F);
+      }
+   }
+
    private List<HudRenderer.PotionRow> buildPotionRows(MinecraftClient client) {
       if (client.player == null) {
          return List.of();
@@ -2322,8 +2345,6 @@ public final class HudRenderer {
    @Environment(EnvType.CLIENT)
    private record Snap(float position, float guideAt) {
    }
-
-   @Environment(EnvType.CLIENT)
 
    @Environment(EnvType.CLIENT)
    private record StaffLine(
