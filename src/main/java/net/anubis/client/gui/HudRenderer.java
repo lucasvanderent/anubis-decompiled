@@ -59,6 +59,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.toast.Toast.Visibility;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 @Environment(EnvType.CLIENT)
