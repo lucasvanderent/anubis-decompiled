@@ -60,7 +60,6 @@ import net.anubis.client.module.impl.misc.PlayerBypassModule;
 import net.anubis.client.module.impl.misc.PlayerDetectionModule;
 import net.anubis.client.module.impl.misc.QuantumModule;
 import net.anubis.client.module.impl.misc.RenderDistanceToggleModule;
-import net.anubis.client.module.impl.misc.SkinChangeModule;
 import net.anubis.client.module.impl.misc.SlowSwingModule;
 import net.anubis.client.module.impl.misc.SpamModule;
 import net.anubis.client.module.impl.misc.SpawnerProtectModule;
@@ -217,7 +216,6 @@ public final class BuiltinModuleProvider implements ModuleProvider {
          new HandModelModule(),
          new HandsModule(),
          new HandAuraModule(),
-         new SkinChangeModule(),
          new SpawnerNotifierModule(),
          new SusChunkFinderModule(),
          new ChunkScannerModule(),
