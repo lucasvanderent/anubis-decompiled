@@ -23,9 +23,6 @@
     }
   ],
   "entrypoints": {
-    "preLaunch": [
-      "net.anubis.bootstrap.AnubisNativeBootstrap"
-    ],
     "client": [
       "net.anubis.client.AnubisClientMod"
     ]
