@@ -21,15 +21,13 @@ import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 public final class MenuContext extends MenuFrame {
    private static final float LOOK_EASE = 2.5F;
    private final Screen screen;
-   private final Runnable openAccounts;
    private final Runnable openCredits;
    private final float[] hover = new float[MenuAction.values().length];
    private float lookX;
    private float lookY;
 
-   public MenuContext(Screen screen, Runnable openAccounts, Runnable openCredits) {
+   public MenuContext(Screen screen, Runnable openCredits) {
       this.screen = screen;
-      this.openAccounts = openAccounts;
       this.openCredits = openCredits;
    }
 
@@ -92,12 +90,10 @@ public final class MenuContext extends MenuFrame {
             case LANGUAGE -> () -> new LanguageOptionsScreen(this.screen, mc.options, mc.getLanguageManager());
             case ACCESSIBILITY -> () -> new AccessibilityOptionsScreen(this.screen, mc.options);
             case ANUBIS -> ImGuiScreen::new;
-            case QUIT, MODS, ACCOUNTS, CREDITS -> null;
+            case QUIT, MODS, CREDITS -> null;
          };
          if (action == MenuAction.QUIT) {
             mc.execute(mc::scheduleStop);
-         } else if (action == MenuAction.ACCOUNTS) {
-            this.openAccounts.run();
          } else if (action == MenuAction.CREDITS) {
             this.openCredits.run();
          } else if (action == MenuAction.MODS) {
