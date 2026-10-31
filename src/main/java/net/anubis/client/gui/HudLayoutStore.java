@@ -29,7 +29,6 @@ public final class HudLayoutStore {
    public static final String REGION_MAP_ID = "region_map";
    public static final String ANTI_VANISH_ID = "anti_vanish";
    public static final String STAFF_LIST_ID = "staff_list";
-   public static final String SPOTIFY_ID = "spotify";
    public static final String RADAR_ID = "radar";
    public static final String HOTKEYS_ID = "hotkeys";
    public static final String TARGET_CARD_ID = "target_card";
@@ -52,7 +51,6 @@ public final class HudLayoutStore {
       "region_map",
       "anti_vanish",
       "staff_list",
-      "spotify",
       "hotkeys",
       "radar",
       "target_card",
