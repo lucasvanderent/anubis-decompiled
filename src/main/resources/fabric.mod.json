@@ -45,9 +45,6 @@
     "fabric-resource-loader-v0": "*",
     "fabric-screen-api-v1": "*"
   },
-  "suggests": {
-    "anubis-jsmacros": "*"
-  },
   "breaks": {
     "embeddium": "*",
     "optifabric": "*",
