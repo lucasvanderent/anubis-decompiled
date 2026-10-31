@@ -25,7 +25,7 @@ jobs:
           echo "=== URLs and HTTP clients ==="
           grep -RInE 'https?://|HttpClient|HttpURLConnection|openConnection|Socket|DatagramSocket' src/main/java || true
           echo "=== Dynamic execution and class loading ==="
-          grep -RInE 'ProcessBuilder|Runtime\\.getRuntime|\\.exec\\(|URLClassLoader|Class\\.forName|ServiceLoader|System\\.load(Library)?' src/main/java || true
+          grep -RInE 'ProcessBuilder|Runtime[.]getRuntime|[.]exec[(]|URLClassLoader|Class[.]forName|ServiceLoader|System[.]load(Library)?' src/main/java || true
           echo "=== Credential and webhook references ==="
           grep -RInEi 'access.?token|refresh.?token|password|client.?secret|discord.?id|webhook.?url' src/main/java || true
       - name: Build mod
