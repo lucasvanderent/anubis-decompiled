@@ -20,4 +20,4 @@ jobs:
           distribution: temurin
           java-version: '21'
       - name: Build mod
-        run: ./gradlew --no-daemon build
+        run: bash ./gradlew --no-daemon build
