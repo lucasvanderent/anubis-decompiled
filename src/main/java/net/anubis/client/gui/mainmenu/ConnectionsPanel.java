@@ -13,11 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import net.anubis.client.account.Account;
-import net.anubis.client.account.AccountType;
-import net.anubis.client.account.Accounts;
 import net.anubis.client.gui.EgyptDraw;
 import net.anubis.client.proxy.Proxies;
 import net.anubis.client.proxy.Proxy;
@@ -30,19 +25,13 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 @Environment(EnvType.CLIENT)
 public final class ConnectionsPanel {
-   private static final String NAME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
    private static final int WINDOW_FLAGS = 447;
-   private static final float ACCOUNTS_W = 820.0F;
    private static final float PROXIES_W = 860.0F;
    private static final float PAD = 24.0F;
    private static final float FIELD_H = 50.0F;
-   private static final float ACCOUNT_ROW_H = 68.0F;
    private static final float PROXY_ROW_H = 46.0F;
    private static final float TAB_H = 40.0F;
    private static final float BAR_H = 30.0F;
-   private static final float FACE = 46.0F;
-   private static final float CHECK = 16.0F;
-   private static final int ACCOUNT_ROWS = 6;
    private static final int PROXY_ROWS = 8;
    private static final float FADE = 0.15F;
    private static final float CONFIRM_FOR = 3.0F;
@@ -55,18 +44,9 @@ public final class ConnectionsPanel {
    private boolean open;
    private boolean opening;
    private long openedAt;
-   private ConnectionsPanel.Tab tab = ConnectionsPanel.Tab.ACCOUNTS;
    private String routeAtOpen = "";
    private Object armed;
    private float armedUntil;
-   private AccountType adding = AccountType.CRACKED;
-   private AccountType accountFilter;
-   private final DuskWidgets.TextField crackedName = new DuskWidgets.TextField(16)
-      .placeholder("Username")
-      .allowedChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_");
-   private final DuskWidgets.TextField token = new DuskWidgets.TextField(4096).placeholder("Minecraft access token").password(true);
-   private CompletableFuture<?> microsoft;
-   private String accountError;
    private final DuskWidgets.TextField proxyInput = new DuskWidgets.TextField(512).placeholder("host:port or socks5://user:pass@host:port");
    private String proxyMessage;
    private boolean proxyError;
@@ -80,7 +60,7 @@ public final class ConnectionsPanel {
       this.onProxyChange = onProxyChange;
    }
 
-   public void open(ConnectionsPanel.Tab tab) {
+   public void open() {
       if (!this.open) {
          this.open = true;
          this.opening = true;
@@ -88,13 +68,8 @@ public final class ConnectionsPanel {
          this.routeAtOpen = route();
       }
 
-      this.tab = tab;
       this.armed = null;
-      if (tab == ConnectionsPanel.Tab.PROXIES) {
-         this.proxyInput.focus();
-      } else if (this.adding != AccountType.MICROSOFT) {
-         this.field(this.adding).focus();
-      }
+      this.proxyInput.focus();
    }
 
    public boolean isOpen() {
@@ -156,14 +131,8 @@ public final class ConnectionsPanel {
 
    private void close() {
       this.open = false;
-      this.crackedName.setText("");
-      this.token.setText("");
       this.proxyInput.setText("");
       this.selected.clear();
-      if (this.microsoft != null) {
-         Accounts.get().cancelMicrosoft();
-      }
-
       if (!route().equals(this.routeAtOpen)) {
          this.onProxyChange.run();
       }
@@ -178,14 +147,12 @@ public final class ConnectionsPanel {
       float a = 1.0F - (1.0F - fade) * (1.0F - fade);
       this.ui.alpha(a);
       DuskScene.veil(dl, sw, sh, 0.5F * a);
-      boolean accounts = this.tab == ConnectionsPanel.Tab.ACCOUNTS;
-      List<Proxy> shown = accounts ? List.of() : this.shownProxies();
-      List<Account> listed = accounts ? this.shownAccounts() : List.of();
+      List<Proxy> shown = this.shownProxies();
       float titleH = this.frame.textHeight(this.frame.itemFont());
       float lineH = this.frame.textHeight(this.frame.bodyFont());
-      float listH = accounts ? Math.max(3, Math.min(listed.size(), 6)) * 68.0F * s : Math.max(1, Math.min(shown.size(), 8)) * 46.0F * s;
-      float bars = accounts ? 96.0F * s : 60.0F * s + 22.0F * s;
-      float w = Math.min((accounts ? 820.0F : 860.0F) * s, sw - 32.0F * s);
+      float listH = Math.max(1, Math.min(shown.size(), 8)) * 46.0F * s;
+      float bars = 82.0F * s;
+      float w = Math.min(860.0F * s, sw - 32.0F * s);
       float h = Math.min(24.0F * s + titleH + 16.0F * s + 50.0F * s + 12.0F * s + lineH + 18.0F * s + bars + listH + 16.0F * s, sh - 32.0F * s);
       float x = Math.round((sw - w) * 0.5F);
       float y = Math.round((sh - h) * 0.5F + (1.0F - a) * 6.0F * s);
@@ -198,15 +165,11 @@ public final class ConnectionsPanel {
       dl.addRectFilled(x, y, x + w, y + h, EgyptDraw.col(-15461610, a));
       dl.addRect(x, y, x + w, y + h, EgyptDraw.col(-923950, 0.1F * a), 0.0F, 0, Math.max(1.0F, s));
       float pad = 24.0F * s;
-      this.frame.text(dl, this.frame.itemFont(), x + pad, y + pad * 0.8F, -923950, a, accounts ? "Accounts" : "Proxies");
+      this.frame.text(dl, this.frame.itemFont(), x + pad, y + pad * 0.8F, -923950, a, "Proxies");
       this.closeCross(x + w - 44.0F * s, y + pad * 0.8F + titleH * 0.5F - 16.0F * s, 32.0F * s, s, a);
       float top = y + pad + titleH + 16.0F * s;
       float listBottom = y + h - 16.0F * s;
-      if (accounts) {
-         this.accounts(listed, x, top, w, listBottom, s, a);
-      } else {
-         this.proxies(shown, x, top, w, listBottom, s, a);
-      }
+      this.proxies(shown, x, top, w, listBottom, s, a);
    }
 
    private void closeCross(float x, float y, float size, float s, float a) {
@@ -224,183 +187,6 @@ public final class ConnectionsPanel {
       float line = Math.max(1.2F, 1.6F * s);
       dl.addLine(cx - c, cy - c, cx + c, cy + c, color, line);
       dl.addLine(cx - c, cy + c, cx + c, cy - c, color, line);
-   }
-
-   private List<Account> shownAccounts() {
-      List<Account> all = Accounts.get().list();
-      return this.accountFilter == null ? all : all.stream().filter(account -> account.type() == this.accountFilter).toList();
-   }
-
-   private void accounts(List<Account> listed, float x, float y, float w, float bottom, float s, float a) {
-      float pad = 24.0F * s;
-      float fx = x + pad;
-      float fw = w - 2.0F * pad;
-      boolean busy = Accounts.get().busy();
-      this.addTabs(fx, y, s, a);
-      y += 54.0F * s;
-      float fh = 50.0F * s;
-      ImFont font = this.frame.bodyFont();
-      String hint;
-      if (this.adding == AccountType.MICROSOFT) {
-         String label = this.microsoft != null ? "Waiting for the browser..." : "Sign in with Microsoft";
-         if (this.box("microsoft", label, fx, y, fw, fh, this.microsoft == null && !busy, a)) {
-            this.signInMicrosoft();
-         }
-
-         hint = "Opens Microsoft's sign-in in your browser";
-      } else {
-         DuskWidgets.TextField field = this.field(this.adding);
-         if (this.ui.textField(field, fx, y, fw, fh) && !field.text().isBlank() && !busy) {
-            this.add(field);
-         }
-
-         hint = this.adding == AccountType.CRACKED
-            ? "Press Enter to add. Joins servers that don't check accounts."
-            : "Press Enter to add. A token works until it expires, about a day.";
-      }
-
-      y += fh + 12.0F * s;
-      if (this.microsoft != null) {
-         float cancelW = this.frame.textWidth(font, "Cancel");
-         this.text(DuskWidgets.fit(font, Accounts.get().status(), fw - cancelW - 16.0F * s), fx, y, -923950, a);
-         if (this.link("cancel", "Cancel", fx + fw - cancelW, y, true, a)) {
-            Accounts.get().cancelMicrosoft();
-         }
-      } else if (busy) {
-         this.text(DuskWidgets.fit(font, Accounts.get().status(), fw), fx, y, -7372954, a);
-      } else if (this.accountError != null) {
-         this.text(DuskWidgets.fit(font, this.accountError, fw), fx, y, -1733516, a);
-      } else {
-         this.text(DuskWidgets.fit(font, hint, fw), fx, y, -7372954, a);
-      }
-
-      y += this.frame.textHeight(font) + 18.0F * s;
-      this.accountFilters(fx, y, s, a);
-      y += 42.0F * s;
-      float listH = bottom - y;
-      if (listed.isEmpty()) {
-         this.centered(this.accountFilter == null ? "No accounts yet" : "No " + this.accountFilter.label() + " accounts", x, y, w, listH, a);
-      } else {
-         Account active = Accounts.get().active();
-         float rowX = x + 8.0F * s;
-         float rowW = w - 16.0F * s;
-         float rowH = 68.0F * s;
-         float scroll = this.ui.beginScroll("accounts", rowX, y, rowW, listH, listed.size() * rowH);
-
-         for (int i = 0; i < listed.size(); i++) {
-            Account account = listed.get(i);
-            this.accountRow(account, account.equals(active), rowX, y - scroll + i * rowH, rowW, rowH, s, a);
-         }
-
-         this.ui.endScroll();
-      }
-   }
-
-   private void addTabs(float x, float y, float s, float a) {
-      ImDrawList dl = this.frame.bg();
-      ImFont font = this.frame.menuFont();
-      float h = 40.0F * s;
-      float ty = y + (h - this.frame.textHeight(font)) * 0.5F;
-
-      for (AccountType type : AccountType.values()) {
-         String label = type.label();
-         float tw = this.frame.textWidth(font, label);
-         boolean over = this.ui.hovered(x - 6.0F * s, y, tw + 12.0F * s, h);
-         if (this.ui.pressed(x - 6.0F * s, y, tw + 12.0F * s, h) && this.microsoft == null && type != this.adding) {
-            this.adding = type;
-            this.accountError = null;
-            if (type != AccountType.MICROSOFT) {
-               this.field(type).focus();
-            }
-         }
-
-         float k = this.ui.hover(new ConnectionsPanel.Key("add", label), over);
-         this.frame.text(dl, font, x, ty, type == this.adding ? -923950 : EgyptDraw.mix(-7372954, -923950, k), a, label);
-         if (type == this.adding) {
-            dl.addRectFilled(x, y + h - 2.0F * s, x + tw, y + h, EgyptDraw.col(-871878, a));
-         }
-
-         x += tw + 30.0F * s;
-      }
-   }
-
-   private void accountFilters(float x, float y, float s, float a) {
-      List<Account> all = Accounts.get().list();
-      if (this.chip("all-accounts", "All", all.size(), this.accountFilter == null, x, y, a)) {
-         this.accountFilter = null;
-      }
-
-      x += this.chipWidth("All", all.size()) + 18.0F * s;
-
-      for (AccountType type : AccountType.values()) {
-         int count = (int)all.stream().filter(account -> account.type() == type).count();
-         if (this.chip(type, type.label(), count, this.accountFilter == type, x, y, a)) {
-            this.accountFilter = type;
-         }
-
-         x += this.chipWidth(type.label(), count) + 18.0F * s;
-      }
-   }
-
-   private void accountRow(Account account, boolean inUse, float x, float y, float w, float h, float s, float a) {
-      ImDrawList dl = this.frame.bg();
-      boolean over = this.ui.hovered(x, y, w, h);
-      float k = this.ui.hover(account, over);
-      if (k > 0.01F && !inUse) {
-         dl.addRectFilled(x, y, x + w, y + h, EgyptDraw.col(-923950, 0.05F * k * a));
-      }
-
-      float face = 46.0F * s;
-      float fx = x + 12.0F * s;
-      PlayerFaces.draw(dl, account, fx, y + (h - face) * 0.5F, face, s, a);
-      String name = account.name().isEmpty() ? account.type().label() + " account" : account.name();
-      float right = this.removeCross(new ConnectionsPanel.Key(account, "remove"), x + w - 8.0F * s, y, h, k, s, a);
-      if (right < 0.0F) {
-         Accounts.get().remove(account);
-      } else {
-         if (inUse) {
-            right = this.tag("Active", -1326998, right, y, h, a);
-         }
-
-         this.entry(this.frame.menuFont(), this.frame.listFont(), fx + face + 16.0F * s, y, h, right - 12.0F * s, name, account.type().label(), a);
-         if (this.ui.pressed(x, y, w, h) && !inUse) {
-            this.login(account);
-         }
-      }
-   }
-
-   private DuskWidgets.TextField field(AccountType type) {
-      return type == AccountType.SESSION ? this.token : this.crackedName;
-   }
-
-   private void add(DuskWidgets.TextField field) {
-      CompletableFuture<Account> added = field == this.token ? Accounts.get().addSession(field.text()) : Accounts.get().addCracked(field.text());
-      this.track(added);
-      added.thenRun(() -> field.setText(""));
-   }
-
-   private void login(Account account) {
-      if (!Accounts.get().busy()) {
-         this.track(Accounts.get().login(account));
-      }
-   }
-
-   private void signInMicrosoft() {
-      CompletableFuture<Account> signIn = Accounts.get().addMicrosoft();
-      this.microsoft = signIn;
-      this.track(signIn);
-      signIn.whenComplete((account, failure) -> this.microsoft = null);
-   }
-
-   private void track(CompletableFuture<?> action) {
-      this.accountError = null;
-      action.whenComplete((result, failure) -> this.accountError = failure == null ? null : messageOf(failure));
-   }
-
-   private static String messageOf(Throwable failure) {
-      Throwable cause = failure instanceof CompletionException && failure.getCause() != null ? failure.getCause() : failure;
-      String message = cause.getMessage();
-      return message != null && !message.isBlank() ? message : "Login failed";
    }
 
    private List<Proxy> shownProxies() {
@@ -809,33 +595,6 @@ public final class ConnectionsPanel {
       return clicked;
    }
 
-   private boolean box(Object key, String label, float x, float y, float w, float h, boolean enabled, float a) {
-      ImDrawList dl = this.frame.bg();
-      float s = this.frame.scale();
-      float alpha = enabled ? a : 0.5F * a;
-      boolean over = enabled && this.ui.hovered(x, y, w, h);
-      boolean clicked = over && this.ui.pressed(x, y, w, h);
-      float k = this.ui.hover(key, over);
-      dl.addRectFilled(x, y, x + w, y + h, EgyptDraw.col(-16777216, 0.35F * alpha));
-      if (k > 0.01F) {
-         dl.addRectFilled(x, y, x + w, y + h, EgyptDraw.col(-871878, 0.08F * k * alpha));
-      }
-
-      dl.addRect(x, y, x + w, y + h, EgyptDraw.col(EgyptDraw.mix(-923950, -871878, k), (0.2F + 0.5F * k) * alpha), 0.0F, 0, Math.max(1.0F, s));
-      ImFont font = this.frame.bodyFont();
-      this.frame
-         .text(
-            dl,
-            font,
-            x + (w - this.frame.textWidth(font, label)) * 0.5F,
-            y + (h - this.frame.textHeight(font)) * 0.5F,
-            EgyptDraw.mix(-923950, -11654, k),
-            alpha,
-            label
-         );
-      return clicked;
-   }
-
    private boolean pasteButton(float x, float y, float size, float a) {
       ImDrawList dl = this.frame.bg();
       float s = this.frame.scale();
@@ -888,12 +647,6 @@ public final class ConnectionsPanel {
 
    private void text(String text, float x, float y, int color, float a) {
       this.frame.text(this.frame.bg(), this.frame.bodyFont(), x, y, color, a, text);
-   }
-
-   private void centered(String text, float x, float y, float w, float h, float a) {
-      ImFont font = this.frame.bodyFont();
-      this.frame
-         .text(this.frame.bg(), font, x + (w - this.frame.textWidth(font, text)) * 0.5F, y + (h - this.frame.textHeight(font)) * 0.5F, -7372954, a, text);
    }
 
    private void drawTooltip() {
@@ -978,9 +731,4 @@ public final class ConnectionsPanel {
       }
    }
 
-   @Environment(EnvType.CLIENT)
-   public enum Tab {
-      ACCOUNTS,
-      PROXIES;
-   }
 }
