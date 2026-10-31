@@ -230,7 +230,7 @@ public final class SpawnerProtectModule extends ClientModule {
             && !(mc.player.distanceTo(player) > this.scanRange.get())) {
             present.add(player.getUuid());
             if (!this.nearbyPlayers.contains(player.getUuid())) {
-               ModuleChat.send(this, ModuleChat.body().warn("Nearby player: ").name(player.getName().getString()).text(" (").value(String.format(Locale.ROOT, "%.1f blocks", mc.player.distanceTo(player))).text(")"));\n
+               ModuleChat.send(this, ModuleChat.body().warn("Nearby player: ").name(player.getName().getString()).text(" (").value(String.format(Locale.ROOT, "%.1f blocks", mc.player.distanceTo(player))).text(")"));
             }
          }
       }
