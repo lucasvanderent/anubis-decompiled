@@ -1,6 +1,5 @@
 package net.anubis.client;
 
-import net.anubis.client.addon.AddonManager;
 import net.anubis.client.config.HudTheme;
 import net.anubis.client.config.ModuleConfigStore;
 import net.anubis.client.config.ProfileAutoLoad;
@@ -60,7 +59,6 @@ public final class AnubisClientMod implements ClientModInitializer {
 
    public void onInitializeClient() {
       LOGGER.info("[Anubis] Initialising");
-      AddonManager.init();
       ImGuiManager.getInstance().setHudRenderer(HudRenderer.getInstance()::render, HudRenderer.getInstance()::hasWork);
       ImGuiManager.getInstance().setStreamRenderer(StreamOverlay::drawFakes, StreamOverlay::hasFakes);
       ImGuiManager.getInstance().setToastRenderer(ToggleToasts::render, ToggleToasts::hasWork);
@@ -86,7 +84,6 @@ public final class AnubisClientMod implements ClientModInitializer {
       });
       openGuiKey = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.anubis.open_gui", Type.KEYSYM, 344, KEY_CATEGORY));
       ModuleConfigStore.getInstance().load();
-      AddonManager.configLoaded();
       ClientTickEvents.END_CLIENT_TICK
          .register(
             (EndTick)client -> {
