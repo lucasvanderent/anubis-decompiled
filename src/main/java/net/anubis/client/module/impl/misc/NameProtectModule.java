@@ -22,7 +22,6 @@ import net.anubis.client.event.Stage;
 import net.anubis.client.event.impl.TickEvent;
 import net.anubis.client.module.ClientModule;
 import net.anubis.client.module.ModuleCategory;
-import net.anubis.client.module.ModuleRegistry;
 import net.anubis.client.module.impl.misc.nameprotect.AliasPolicy;
 import net.anubis.client.module.impl.misc.nameprotect.NameMatcher;
 import net.anubis.client.module.impl.misc.nameprotect.ProtectedText;
@@ -132,14 +131,6 @@ public final class NameProtectModule extends ClientModule {
    }
 
    public static SkinTextures hiddenHead(UUID profileId, SkinTextures real) {
-      SkinChangeModule skins = ModuleRegistry.get(SkinChangeModule.class);
-      if (skins != null && skins.isEnabled()) {
-         SkinTextures worn = skins.skinFor(profileId, real);
-         if (worn != real) {
-            return worn;
-         }
-      }
-
       return DefaultSkinHelper.getSkinTextures(profileId);
    }
 
