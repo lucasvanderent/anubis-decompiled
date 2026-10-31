@@ -5,8 +5,6 @@ import imgui.ImDrawList;
 import imgui.ImFont;
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import net.anubis.client.account.Account;
-import net.anubis.client.account.Accounts;
 import net.anubis.client.gui.EgyptDraw;
 import net.anubis.client.imgui.ImGuiManager;
 import net.anubis.client.proxy.Proxies;
@@ -95,11 +93,10 @@ public final class MultiplayerOverlay {
       float header = (float)(33.0 * gui);
       float y = Math.round((header - h) * 0.5F);
       ImFont font = this.frame.menuFont();
-      float w = Math.max(this.frame.textWidth(font, "Accounts"), this.frame.textWidth(font, "Proxies")) + 82.0F * s;
+      float w = this.frame.textWidth(font, "Proxies") + 82.0F * s;
       Proxy proxy = Proxies.get().enabled();
       float x = margin;
-      boolean over = this.button(ConnectionsPanel.Tab.ACCOUNTS, "Accounts", null, x, y, w, h, s, a);
-      over |= this.button(ConnectionsPanel.Tab.PROXIES, "Proxies", proxy, x + w + 8.0F * s, y, w, h, s, a);
+      boolean over = this.button("Proxies", proxy, x, y, w, h, s, a);
       this.overButton = over;
       float titleRight = (float)((window.getScaledWidth() + MinecraftClient.getInstance().textRenderer.getWidth(this.screen.getTitle())) / 2.0 * gui);
       float right = this.frame.width() - margin;
@@ -127,14 +124,14 @@ public final class MultiplayerOverlay {
       }
    }
 
-   private boolean button(ConnectionsPanel.Tab tab, String label, Proxy proxy, float x, float y, float w, float h, float s, float a) {
+   private boolean button(String label, Proxy proxy, float x, float y, float w, float h, float s, float a) {
       ImDrawList dl = this.frame.bg();
       boolean over = this.ui.hovered(x, y, w, h);
       if (this.ui.pressed(x, y, w, h)) {
-         this.panel.open(tab);
+         this.panel.open();
       }
 
-      float k = this.ui.hover(tab, over);
+      float k = this.ui.hover("proxies", over);
       dl.addRectFilled(x, y, x + w, y + h, EgyptDraw.col(-15461610, 0.88F * a));
       if (k > 0.01F) {
          dl.addRectFilled(x, y, x + w, y + h, EgyptDraw.col(-923950, 0.06F * k * a));
@@ -144,17 +141,7 @@ public final class MultiplayerOverlay {
       float icon = 34.0F * s;
       float ix = x + 16.0F * s;
       float iy = y + (h - icon) * 0.5F;
-      if (tab == ConnectionsPanel.Tab.ACCOUNTS) {
-         Account active = Accounts.get().active();
-         if (active != null) {
-            PlayerFaces.draw(dl, active, ix, iy, icon, s, a);
-         } else {
-            PlayerFaces.draw(dl, MinecraftClient.getInstance().getSession().getUuidOrNull(), false, ix, iy, icon, s, a);
-         }
-      } else {
-         ConnectionsPanel.proxyDot(dl, ix + icon * 0.5F, iy + icon * 0.5F, proxy != null, 2.1F * s, a);
-      }
-
+      ConnectionsPanel.proxyDot(dl, ix + icon * 0.5F, iy + icon * 0.5F, proxy != null, 2.1F * s, a);
       ImFont font = this.frame.menuFont();
       this.frame.text(dl, font, ix + icon + 12.0F * s, y + (h - this.frame.textHeight(font)) * 0.5F, EgyptDraw.mix(-923950, -11654, k), a, label);
       return over;
