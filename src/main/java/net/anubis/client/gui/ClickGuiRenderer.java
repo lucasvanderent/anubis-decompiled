@@ -1810,7 +1810,7 @@ public final class ClickGuiRenderer {
       this.sectionLabel("Layout", pad);
       this.settingRows(pad, contentW, theme.rounding, theme.moduleDividers, theme.backgroundDim, theme.menuBlur);
       this.sectionLabel("Interface", pad);
-      this.settingRows(pad, contentW, theme.uiScale, theme.font, theme.animationSpeed, theme.animateLines, theme.customMainMenu, theme.communityPopup);
+      this.settingRows(pad, contentW, theme.uiScale, theme.font, theme.animationSpeed, theme.animateLines, theme.customMainMenu);
       this.sectionLabel("Share", pad);
       this.renderThemeActions(theme, pad, contentW);
    }
