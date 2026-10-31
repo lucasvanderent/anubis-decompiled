@@ -124,7 +124,6 @@
     "MixinRotationMultiPlayerGameMode",
     "MixinScreenEffectRenderer",
     "MixinSectionCompiler",
-    "MixinShaderEspLevelRenderer",
     "MixinSneakKeyboardInput",
     "MixinSneakLocalPlayer",
     "MixinSneakServerboundInteractPacket",
