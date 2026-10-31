@@ -57,7 +57,6 @@ public final class HudTheme {
       this.regionMap,
       this.antiVanish,
       this.staffList,
-      this.spotify,
       this.hotkeys,
       this.radar,
       this.toasts,
@@ -113,8 +112,6 @@ public final class HudTheme {
          return this.antiVanish;
       } else if ("staff_list".equals(id)) {
          return this.staffList;
-      } else if ("spotify".equals(id)) {
-         return this.spotify;
       } else if ("hotkeys".equals(id)) {
          return this.hotkeys;
       } else if ("radar".equals(id)) {
