@@ -2641,7 +2641,6 @@ public final class ClickGuiRenderer {
          new Item("region_map", HudTheme.get().regionMap.label),
          new Item("anti_vanish", HudTheme.get().antiVanish.label),
          new Item("staff_list", HudTheme.get().staffList.label),
-         new Item("spotify", HudTheme.get().spotify.label),
          new Item("hotkeys", HudTheme.get().hotkeys.label),
          new Item("radar", HudRenderer.editorLabel("radar")),
          new Item("target_card", HudTheme.get().targetCard.label),
