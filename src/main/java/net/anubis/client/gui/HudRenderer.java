@@ -380,8 +380,6 @@ public final class HudRenderer {
                      this.drawStaff(dl, staffList, staffPlan, shadow, this.transform(staffList, editMode, staffShown));
                   }
 
-                  }
-
                   if (radarShown || editMode) {
                      this.drawRadar(dl, radar, radarSize, client, shadow, this.transform(radar, editMode, radarShown));
                   }
