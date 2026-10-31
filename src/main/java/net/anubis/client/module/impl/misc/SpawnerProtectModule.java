@@ -1,12 +1,10 @@
 package net.anubis.client.module.impl.misc;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -15,7 +13,6 @@ import net.anubis.client.event.impl.BlockUpdateEvent;
 import net.anubis.client.event.impl.TickEvent;
 import net.anubis.client.module.ClientModule;
 import net.anubis.client.module.ModuleCategory;
-import net.anubis.client.module.impl.misc.spawnerprotect.SpawnerAlerts;
 import net.anubis.client.module.setting.BooleanSetting;
 import net.anubis.client.module.setting.NumberSetting;
 import net.anubis.client.module.setting.StringSetting;
@@ -59,7 +56,6 @@ public final class SpawnerProtectModule extends ClientModule {
    private final NumberSetting blockUpdateWindow = this.addSetting(
       "block-update-window", new NumberSetting("Block Update Window", 60.0F, 1.0F, 600.0F).step(1.0F)
    );
-   private final StringSetting webhookUrl = this.addSetting("webhook-url", new StringSetting("Webhook URL", ""));
    private SpawnerProtectModule.State currentState = SpawnerProtectModule.State.WAITING_FOR_STRANGER;
    private BlockPos targetBlock;
    private BlockPos targetChest;
@@ -75,9 +71,8 @@ public final class SpawnerProtectModule extends ClientModule {
    private int miningTicks;
 
    public SpawnerProtectModule() {
-      super("spawner-protect", "Spawner Protect", "Protects spawners on block updates; player arrivals only send webhook notifications.", ModuleCategory.DONUT);
+      super("spawner-protect", "Spawner Protect", "Protects spawners on block updates and warns about nearby players.", ModuleCategory.DONUT);
       this.whitelist.privateValue();
-      this.webhookUrl.privateValue();
    }
 
    @Override
@@ -169,15 +164,7 @@ public final class SpawnerProtectModule extends ClientModule {
                      ModuleChat.send(
                         this, "\ud83d\udea8 UZAK TESPİT: Yakında bir blok kırıldı! (Yatay Mesafe: " + (int)horizontalDist + "m, Y: " + pos.getY() + ")"
                      );
-                     this.sendWebhook(
-                        "\ud83d\udea8 Protection activated",
-                        "The block-break threshold was reached. Spawner collection has started.",
-                        15548997,
-                        SpawnerAlerts.field("\ud83d\udce1 Trigger", "Block breaking", true),
-                        SpawnerAlerts.field("\ud83e\uddf1 Block counter", this.blockBreakCounter + " / " + this.blockUpdateThreshold.getInt(), true),
-                        SpawnerAlerts.field("\ud83d\udccf Horizontal distance", (int)horizontalDist + " blocks", true),
-                        SpawnerAlerts.field("\ud83d\udccd Block location", coordinates(pos), false)
-                     );
+                     
                   }
                }
             }
@@ -243,15 +230,7 @@ public final class SpawnerProtectModule extends ClientModule {
             && !(mc.player.distanceTo(player) > this.scanRange.get())) {
             present.add(player.getUuid());
             if (!this.nearbyPlayers.contains(player.getUuid())) {
-               this.sendWebhook(
-                  "\ud83d\udc64 A player entered your range",
-                  "A new player is nearby. This event only sends a notification.",
-                  5793266,
-                  SpawnerAlerts.field("Player", "`" + player.getName().getString() + "`", true),
-                  SpawnerAlerts.field("\ud83d\udccf Distance", String.format(Locale.ROOT, "%.1f blocks", mc.player.distanceTo(player)), true),
-                  SpawnerAlerts.field("\ud83d\udee1️ Protection", this.strangerDetected ? "In progress" : "Standby", true),
-                  SpawnerAlerts.field("\ud83d\udccd Player location", coordinates(player.getBlockPos()), false)
-               );
+               ModuleChat.send(this, ModuleChat.body().warn("Nearby player: ").name(player.getName().getString()).text(" (").value(String.format(Locale.ROOT, "%.1f blocks", mc.player.distanceTo(player))).text(")"));\n
             }
          }
       }
@@ -596,15 +575,7 @@ public final class SpawnerProtectModule extends ClientModule {
       if (this.lagWaitTicks == 0) {
          int remaining = this.getSpawnerCount();
          boolean leftOver = remaining > 0;
-         this.sendWebhook(
-            leftOver ? "⚠️ Spawners remain in inventory" : "✅ Task completed",
-            leftOver
-               ? "Some spawners are still in your inventory. Disconnecting in two seconds."
-               : "The collection sequence has ended. Disconnecting in two seconds.",
-            leftOver ? 16705372 : 5763719,
-            SpawnerAlerts.field("\ud83c\udf92 Remaining in inventory", remaining + " spawners", true),
-            SpawnerAlerts.field("\ud83d\udeaa Next step", "Disconnect from server", true)
-         );
+         
          ModuleChat.send(this, "Görev bitti, eşyaların sunucuya kaydedilmesi için 2 saniye beklenip çıkılacak...");
       }
 
@@ -619,22 +590,6 @@ public final class SpawnerProtectModule extends ClientModule {
          this.resetModule();
          this.requestDisable();
       }
-   }
-
-   @SafeVarargs
-   private void sendWebhook(String title, String description, int color, Map<String, Object>... eventFields) {
-      MinecraftClient mc = MinecraftClient.getInstance();
-      if (!this.webhookUrl.get().isBlank() && mc.player != null && mc.world != null) {
-         List<Map<String, Object>> fields = new ArrayList<>(Arrays.asList(eventFields));
-         fields.add(SpawnerAlerts.field("\ud83d\udc64 Account", "`" + mc.player.getName().getString() + "`", true));
-         fields.add(SpawnerAlerts.field("\ud83c\udf0d Dimension", "`" + mc.world.getRegistryKey().getValue() + "`", true));
-         fields.add(SpawnerAlerts.field("\ud83d\udccd Your location", coordinates(mc.player.getBlockPos()), false));
-         SpawnerAlerts.send(this.webhookUrl.get(), SpawnerAlerts.payload(title, description, color, fields, Instant.now()));
-      }
-   }
-
-   private static String coordinates(BlockPos pos) {
-      return "`X: " + pos.getX() + "  Y: " + pos.getY() + "  Z: " + pos.getZ() + "`";
    }
 
    private void updateSneak(boolean sneak) {
