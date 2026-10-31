@@ -21,3 +21,10 @@ jobs:
           java-version: '21'
       - name: Build mod
         run: bash ./gradlew --no-daemon build
+      - name: Upload built mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: anubis-cleaned-client
+          path: build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 7
