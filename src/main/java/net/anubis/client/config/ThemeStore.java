@@ -51,7 +51,6 @@ public final class ThemeStore {
    public final NumberSetting animationSpeed = new NumberSetting("Animation speed", 1.3F, 0.0F, 2.0F).step(0.1F);
    public final BooleanSetting animateLines = new BooleanSetting("Animate patterns", true);
    public final BooleanSetting customMainMenu = new BooleanSetting("Custom menus", true);
-   public final BooleanSetting communityPopup = new BooleanSetting("Community popup", true);
    public final Surface panels = new Surface("panels", "Panels", false, -14736856, 1.0F, 0.45F, "Flow");
    public final Surface cards = new Surface("cards", "Cards", true, -15263458, 1.0F, 0.85F);
    public final Surface tabBar = new Surface("tabbar", "Tab bar", false, -15263458, 1.0F, 0.5F, "Flow");
@@ -75,7 +74,6 @@ public final class ThemeStore {
 
       this.shared = List.copyOf(all);
       all.add(this.customMainMenu);
-      all.add(this.communityPopup);
       this.settings = List.copyOf(all);
       this.defaults = snapshot(this.settings, true);
       this.customMainMenu.onChange(() -> {

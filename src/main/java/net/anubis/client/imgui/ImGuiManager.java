@@ -1,7 +1,6 @@
 package net.anubis.client.imgui;
 
 import com.mojang.blaze3d.opengl.GlStateManager;
-import imgui.AnubisAndroidNative;
 import imgui.ImFont;
 import imgui.ImFontConfig;
 import imgui.ImFontGlyphRangesBuilder;
@@ -18,7 +17,6 @@ import java.util.Arrays;
 import java.util.function.BooleanSupplier;
 import net.anubis.client.config.HudTheme;
 import net.anubis.client.config.ThemeStore;
-import net.anubis.client.gui.AndroidSystemPicker;
 import net.anubis.client.gui.GuiPalette;
 import net.anubis.client.gui.ThemeImages;
 import net.fabricmc.api.EnvType;
@@ -357,7 +355,6 @@ public final class ImGuiManager {
    }
 
    public void dispose() {
-      AndroidSystemPicker.cancel();
       if (this.initialized) {
          this.gl3.shutdown();
          this.glfw.shutdown();
@@ -560,7 +557,4 @@ public final class ImGuiManager {
       }
    }
 
-   static {
-      AnubisAndroidNative.prepare();
-   }
 }

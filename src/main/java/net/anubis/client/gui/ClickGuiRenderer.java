@@ -267,7 +267,6 @@ public final class ClickGuiRenderer {
          removeTheme();
       }
 
-      AndroidSystemPicker.render();
    }
 
    private void handleShortcuts() {
@@ -1811,7 +1810,7 @@ public final class ClickGuiRenderer {
       this.sectionLabel("Layout", pad);
       this.settingRows(pad, contentW, theme.rounding, theme.moduleDividers, theme.backgroundDim, theme.menuBlur);
       this.sectionLabel("Interface", pad);
-      this.settingRows(pad, contentW, theme.uiScale, theme.font, theme.animationSpeed, theme.animateLines, theme.customMainMenu, theme.communityPopup);
+      this.settingRows(pad, contentW, theme.uiScale, theme.font, theme.animationSpeed, theme.animateLines, theme.customMainMenu);
       this.sectionLabel("Share", pad);
       this.renderThemeActions(theme, pad, contentW);
    }
@@ -1860,7 +1859,6 @@ public final class ClickGuiRenderer {
    }
 
    private void highlightSurfaces(ThemeStore theme) {
-      if (!AndroidSystemPicker.blocksEditor()) {
          float mx = ImGui.getIO().getMousePosX();
          float my = ImGui.getIO().getMousePosY();
          boolean blocked = contains(this.inspectorRect, mx, my) || ImGui.isPopupOpen("", 3072);
@@ -1898,7 +1896,6 @@ public final class ClickGuiRenderer {
                this.selectSurface(hovered);
             }
          }
-      }
    }
 
    private void outlineSurface(Surface surface, float x, float y, float w, float h, float rounding) {
@@ -2353,9 +2350,7 @@ public final class ClickGuiRenderer {
    }
 
    public boolean handleEscape() {
-      if (AndroidSystemPicker.handleEscape()) {
-         return true;
-      } else if (this.listeningKeySetting != null) {
+      if (this.listeningKeySetting != null) {
          this.listeningKeySetting.setValue(-1);
          this.listeningKeySetting = null;
          this.listeningKeyFirstFrame = false;
@@ -2646,7 +2641,6 @@ public final class ClickGuiRenderer {
          new Item("region_map", HudTheme.get().regionMap.label),
          new Item("anti_vanish", HudTheme.get().antiVanish.label),
          new Item("staff_list", HudTheme.get().staffList.label),
-         new Item("spotify", HudTheme.get().spotify.label),
          new Item("hotkeys", HudTheme.get().hotkeys.label),
          new Item("radar", HudRenderer.editorLabel("radar")),
          new Item("target_card", HudTheme.get().targetCard.label),
@@ -2808,7 +2802,6 @@ public final class ClickGuiRenderer {
    }
 
    private void highlightHudElements() {
-      if (!AndroidSystemPicker.blocksEditor()) {
          float mx = ImGui.getIO().getMousePosX();
          float my = ImGui.getIO().getMousePosY();
          boolean dragging = HudRenderer.getInstance().isDragging();
@@ -2849,7 +2842,6 @@ public final class ClickGuiRenderer {
                this.selectHudElement(hovered.id);
             }
          }
-      }
    }
 
    private void outlineHudElement(ImDrawList dl, HudLayoutStore.HudElementState state, int color) {

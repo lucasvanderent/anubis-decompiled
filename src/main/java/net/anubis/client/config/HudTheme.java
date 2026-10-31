@@ -43,7 +43,6 @@ public final class HudTheme {
    public final Surface regionMap = surface("hud_region_map", "Region Map");
    public final Surface antiVanish = surface("hud_anti_vanish", "Anti Vanish", 0.6F);
    public final Surface staffList = surface("hud_staff_list", "Staff List", 0.6F);
-   public final Surface spotify = surface("hud_spotify", "Spotify");
    public final Surface hotkeys = surface("hud_hotkeys", "Hotkeys", 0.6F);
    public final Surface radar = surface("hud_radar", "Radar", 0.6F);
    public final Surface toasts = surface("hud_toasts", "Toggle Toasts");
@@ -58,7 +57,6 @@ public final class HudTheme {
       this.regionMap,
       this.antiVanish,
       this.staffList,
-      this.spotify,
       this.hotkeys,
       this.radar,
       this.toasts,
@@ -114,8 +112,6 @@ public final class HudTheme {
          return this.antiVanish;
       } else if ("staff_list".equals(id)) {
          return this.staffList;
-      } else if ("spotify".equals(id)) {
-         return this.spotify;
       } else if ("hotkeys".equals(id)) {
          return this.hotkeys;
       } else if ("radar".equals(id)) {

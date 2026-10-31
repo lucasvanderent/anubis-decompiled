@@ -29,7 +29,6 @@ public final class HudLayoutStore {
    public static final String REGION_MAP_ID = "region_map";
    public static final String ANTI_VANISH_ID = "anti_vanish";
    public static final String STAFF_LIST_ID = "staff_list";
-   public static final String SPOTIFY_ID = "spotify";
    public static final String RADAR_ID = "radar";
    public static final String HOTKEYS_ID = "hotkeys";
    public static final String TARGET_CARD_ID = "target_card";
@@ -52,7 +51,6 @@ public final class HudLayoutStore {
       "region_map",
       "anti_vanish",
       "staff_list",
-      "spotify",
       "hotkeys",
       "radar",
       "target_card",
@@ -413,12 +411,7 @@ public final class HudLayoutStore {
          case "anti_vanish":
             state.x = Math.max(margin, (screenW - state.width) * 0.5F);
             state.y = margin + this.existingHeight("info_bar", 28.0F) + gap;
-            break;
-         case "spotify":
-            state.x = margin;
-            state.y = this.firstFreeY(state, coordsBottom, gap);
-            break;
-         case "staff_list":
+            break;         case "staff_list":
             state.x = margin;
             state.y = this.firstFreeY(state, Math.round(screenH * 0.38F), gap);
             break;
@@ -475,7 +468,6 @@ public final class HudLayoutStore {
          case "region_map" -> 240.0F;
          case "anti_vanish" -> 180.0F;
          case "staff_list" -> 190.0F;
-         case "spotify" -> 320.0F;
          case "hotkeys" -> 190.0F;
          case "radar" -> 150.0F;
          case "target_card" -> 244.0F;

@@ -2,10 +2,7 @@ package net.anubis.client.module.impl.render;
 
 import com.example.client.mixin.AccessorHandItemLayer;
 import com.example.client.mixin.AccessorHandItemRenderState;
-import com.example.client.mixin.AccessorSkinChangeEntityRenderDispatcher;
 import java.util.function.Consumer;
-import net.anubis.client.module.ModuleRegistry;
-import net.anubis.client.module.impl.misc.SkinChangeModule;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
@@ -57,22 +54,7 @@ final class FirstPersonArm {
          EntityRenderManager dispatcher = mc.getEntityRenderDispatcher();
          PlayerEntityRenderer<AbstractClientPlayerEntity> renderer = dispatcher.getPlayerRenderer(player);
          SkinTextures skin = player.getSkin();
-         SkinChangeModule change = ModuleRegistry.get(SkinChangeModule.class);
-         if (change != null && change.isEnabled()) {
-            SkinTextures swapped = change.skinFor(player.getId(), skin);
-            if (swapped != skin) {
-               PlayerEntityRenderer<AbstractClientPlayerEntity> byModel = ((AccessorSkinChangeEntityRenderDispatcher)dispatcher)
-                  .anubis$skinChangePlayerRenderers()
-                  .get(swapped.model());
-               if (byModel != null) {
-                  renderer = byModel;
-               }
-
-               skin = swapped;
-            }
-         }
-
-         return new FirstPersonArm.Arm(
+                  return new FirstPersonArm.Arm(
             renderer,
             skin.body().texturePath(),
             player.isModelPartVisible(PlayerModelPart.RIGHT_SLEEVE),

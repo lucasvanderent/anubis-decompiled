@@ -1,0 +1,39 @@
+name: Build
+on:
+  push:
+    branches:
+      - remove-custom-account-management
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Static security pattern scan
+        shell: bash
+        run: |
+          echo "=== URLs and HTTP clients ==="
+          grep -RInE 'https?://|HttpClient|HttpURLConnection|openConnection|Socket|DatagramSocket' src/main/java || true
+          echo "=== Dynamic execution and class loading ==="
+          grep -RInE 'ProcessBuilder|Runtime[.]getRuntime|[.]exec[(]|URLClassLoader|Class[.]forName|ServiceLoader|System[.]load(Library)?' src/main/java || true
+          echo "=== Credential and webhook references ==="
+          grep -RInEi 'access.?token|refresh.?token|password|client.?secret|discord.?id|webhook.?url' src/main/java || true
+      - name: Build mod
+        run: bash ./gradlew --no-daemon build
+      - name: Upload built mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: anubis-cleaned-client
+          path: build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 7

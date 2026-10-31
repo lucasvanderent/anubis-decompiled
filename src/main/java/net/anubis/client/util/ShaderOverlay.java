@@ -2,12 +2,8 @@ package net.anubis.client.util;
 
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import com.mojang.blaze3d.systems.ProjectionType;
 import net.minecraft.client.render.RawProjectionMatrix;
 import net.minecraft.client.render.state.CameraRenderState;
@@ -27,37 +23,14 @@ import org.joml.Quaternionf;
 
 @Environment(EnvType.CLIENT)
 public final class ShaderOverlay {
-   private static final MethodHandle SHADER_PACK_IN_USE = irisProbe();
    private static final GizmoCollectorImpl COLLECTOR = new GizmoCollectorImpl();
    private static RawProjectionMatrix projectionBuffer;
 
    private ShaderOverlay() {
    }
 
-   private static MethodHandle irisProbe() {
-      if (!FabricLoader.getInstance().isModLoaded("iris")) {
-         return null;
-      }
-
-      try {
-         Class<?> api = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
-         Object instance = api.getMethod("getInstance").invoke(null);
-         return MethodHandles.publicLookup().findVirtual(api, "isShaderPackInUse", MethodType.methodType(boolean.class)).bindTo(instance);
-      } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
-         return null;
-      }
-   }
-
    public static boolean shaderPackInUse() {
-      if (SHADER_PACK_IN_USE == null) {
-         return false;
-      }
-
-      try {
-         return (boolean)SHADER_PACK_IN_USE.invokeExact();
-      } catch (Throwable t) {
-         return false;
-      }
+      return false;
    }
 
    public static CollectorScope capture() {

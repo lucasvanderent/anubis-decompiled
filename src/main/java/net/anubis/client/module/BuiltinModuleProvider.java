@@ -6,7 +6,6 @@ import net.anubis.client.module.impl.client.HudModule;
 import net.anubis.client.module.impl.client.PerformanceModule;
 import net.anubis.client.module.impl.client.RadarModule;
 import net.anubis.client.module.impl.client.RegionMapModule;
-import net.anubis.client.module.impl.client.SpotifyHudModule;
 import net.anubis.client.module.impl.combat.AimAssistModule;
 import net.anubis.client.module.impl.combat.AnchorAuraModule;
 import net.anubis.client.module.impl.combat.AutoCityModule;
@@ -47,7 +46,6 @@ import net.anubis.client.module.impl.misc.AutoReplenishModule;
 import net.anubis.client.module.impl.misc.BlockNotifierModule;
 import net.anubis.client.module.impl.misc.ChatMacroModule;
 import net.anubis.client.module.impl.misc.CoordSnapperModule;
-import net.anubis.client.module.impl.misc.DiscordPresenceModule;
 import net.anubis.client.module.impl.misc.DonutNoFallModule;
 import net.anubis.client.module.impl.misc.FakeStats;
 import net.anubis.client.module.impl.misc.FastUseModule;
@@ -62,7 +60,6 @@ import net.anubis.client.module.impl.misc.PlayerBypassModule;
 import net.anubis.client.module.impl.misc.PlayerDetectionModule;
 import net.anubis.client.module.impl.misc.QuantumModule;
 import net.anubis.client.module.impl.misc.RenderDistanceToggleModule;
-import net.anubis.client.module.impl.misc.SkinChangeModule;
 import net.anubis.client.module.impl.misc.SlowSwingModule;
 import net.anubis.client.module.impl.misc.SpamModule;
 import net.anubis.client.module.impl.misc.SpawnerProtectModule;
@@ -116,7 +113,6 @@ import net.anubis.client.module.impl.render.PearlTrajectoryModule;
 import net.anubis.client.module.impl.render.PharaohHeaddressModule;
 import net.anubis.client.module.impl.render.PrimeChunkFinderModule;
 import net.anubis.client.module.impl.render.RelicParticlesModule;
-import net.anubis.client.module.impl.render.ShaderEspModule;
 import net.anubis.client.module.impl.render.SpawnerNametagsModule;
 import net.anubis.client.module.impl.render.SpawnerNotifierModule;
 import net.anubis.client.module.impl.render.StorageEspModule;
@@ -219,7 +215,6 @@ public final class BuiltinModuleProvider implements ModuleProvider {
          new HandModelModule(),
          new HandsModule(),
          new HandAuraModule(),
-         new SkinChangeModule(),
          new SpawnerNotifierModule(),
          new SusChunkFinderModule(),
          new ChunkScannerModule(),
@@ -228,7 +223,6 @@ public final class BuiltinModuleProvider implements ModuleProvider {
          new LightEspModule(),
          new FullbrightModule(),
          new EspModule(),
-         new ShaderEspModule(),
          new NametagsModule(),
          new SpawnerNametagsModule(),
          new BlockEspModule(),
@@ -259,13 +253,11 @@ public final class BuiltinModuleProvider implements ModuleProvider {
          new TimeChangerModule(),
          new LowHealthWarningModule(),
          new HudModule(),
-         new SpotifyHudModule(),
          new RegionMapModule(),
          new RadarModule(),
          new HotkeysModule(),
          new TracersModule(),
          new PerformanceModule(),
-         new DiscordPresenceModule(),
          new AutoTpaHereModule(),
          new OrderAhSellerModule(),
          new AhSellModule(),

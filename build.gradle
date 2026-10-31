@@ -64,11 +64,6 @@ dependencies {
 		include "io.github.spair:${it}:${project.imgui_version}"
 	}
 
-	// SOCKS/HTTP proxy support. Netty core is provided by Minecraft.
-	['netty-codec-socks', 'netty-handler-proxy'].each {
-		implementation("io.netty:${it}:${project.netty_version}") { transitive = false }
-		include "io.netty:${it}:${project.netty_version}"
-	}
 }
 
 processResources {

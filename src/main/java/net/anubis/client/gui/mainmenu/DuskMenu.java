@@ -19,7 +19,7 @@ public final class DuskMenu {
    private static final float BUTTON_H = 46.0F;
    private static final float ITEM_TRACK = 2.0F;
    private static final List<MenuAction> ICONS = List.of(
-      MenuAction.ACCOUNTS, MenuAction.LANGUAGE, MenuAction.ACCESSIBILITY, MenuAction.ANUBIS, MenuAction.MODS, MenuAction.CREDITS
+      MenuAction.LANGUAGE, MenuAction.ACCESSIBILITY, MenuAction.ANUBIS, MenuAction.MODS, MenuAction.CREDITS
    );
    private static final float ICON_R = 9.0F;
    private static final float ICON_STEP = 34.0F;
@@ -102,7 +102,7 @@ public final class DuskMenu {
       float k = a > 0.5F ? c.control(action, cx - reach, cy - reach, reach * 2.0F, reach * 2.0F) : c.hover(action, false);
       MenuIcons.draw(c.bg(), action, cx, cy, r, EgyptDraw.col(EgyptDraw.mix(-4676216, -11654, k), a), Math.max(1.2F, 1.5F * s));
       if (k > 0.5F) {
-         String name = action == MenuAction.ACCOUNTS ? action.label() + "  ·  " + c.displayName() : action.label();
+         String name = action.label();
          c.tooltip(name, Math.min(cx, c.width() - c.textWidth(c.tagFont(), name) * 0.5F - 18.0F * s), cy - reach - c.textHeight(c.tagFont()) - 14.0F * s);
       }
    }

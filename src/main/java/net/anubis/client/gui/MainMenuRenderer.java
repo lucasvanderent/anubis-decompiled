@@ -4,8 +4,6 @@ import imgui.ImDrawList;
 import imgui.ImFont;
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import net.anubis.client.gui.mainmenu.CommunityPopup;
-import net.anubis.client.gui.mainmenu.ConnectionsPanel;
 import net.anubis.client.gui.mainmenu.CreditsPopup;
 import net.anubis.client.gui.mainmenu.DuskMenu;
 import net.anubis.client.gui.mainmenu.MenuContext;
@@ -22,18 +20,16 @@ final class MainMenuRenderer {
    private static final Logger LOGGER = LoggerFactory.getLogger("Anubis");
    private static final float NOWHERE = -10000.0F;
    private final MenuContext context;
-   private final CommunityPopup popup = new CommunityPopup();
-   private final ConnectionsPanel accounts = new ConnectionsPanel(() -> {});
    private final CreditsPopup credits = new CreditsPopup();
    private long openedAt = System.nanoTime();
    private boolean failed;
 
    MainMenuRenderer(Screen screen) {
-      this.context = new MenuContext(screen, () -> this.accounts.open(ConnectionsPanel.Tab.ACCOUNTS), this.credits::open);
+      this.context = new MenuContext(screen, this.credits::open);
    }
 
    boolean keyPressed(int key) {
-      return this.popup.keyPressed(key) || this.credits.keyPressed(key) || this.accounts.keyPressed(key);
+      return this.credits.keyPressed(key);
    }
 
    void render() {
@@ -53,8 +49,7 @@ final class MainMenuRenderer {
       float height = io.getDisplaySizeY();
       float scale = ImGuiManager.getInstance().uiScale();
       float dt = Math.max(0.001F, io.getDeltaTime());
-      this.popup.update(t, live);
-      boolean menuPointer = !this.popup.isOpen() && !this.accounts.isOpen() && !this.credits.isOpen();
+      boolean menuPointer = !this.credits.isOpen();
       this.context
          .begin(
             ImGui.getBackgroundDrawList(),
@@ -84,9 +79,7 @@ final class MainMenuRenderer {
          drawTooltip(this.context);
       }
 
-      this.accounts.render(width, height, scale, dt);
       this.credits.render(ImGui.getForegroundDrawList(), width, height, scale, dt, mx, my, click);
-      this.popup.render(ImGui.getForegroundDrawList(), width, height, scale, dt, mx, my, click);
    }
 
    private static void drawTooltip(MenuContext c) {

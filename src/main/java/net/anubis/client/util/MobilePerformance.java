@@ -1,13 +1,12 @@
 package net.anubis.client.util;
 
-import imgui.AnubisAndroidNative;
 import net.anubis.client.module.impl.client.PerformanceModule;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public final class MobilePerformance {
-   private static final boolean ANDROID = AnubisAndroidNative.isAndroidRuntime();
+   private static final boolean ANDROID = false;
 
    private MobilePerformance() {
    }

@@ -15,7 +15,6 @@ public enum MenuAction {
    ACCESSIBILITY("Accessibility"),
    ANUBIS("Anubis Client"),
    MODS("Mods Folder"),
-   ACCOUNTS("Accounts"),
    CREDITS("Credits");
 
    public static final List<MenuAction> MAIN = List.of(SINGLEPLAYER, MULTIPLAYER, REALMS, OPTIONS, QUIT);
