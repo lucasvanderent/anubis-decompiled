@@ -6,7 +6,6 @@ import net.anubis.client.module.impl.client.HudModule;
 import net.anubis.client.module.impl.client.PerformanceModule;
 import net.anubis.client.module.impl.client.RadarModule;
 import net.anubis.client.module.impl.client.RegionMapModule;
-import net.anubis.client.module.impl.client.SpotifyHudModule;
 import net.anubis.client.module.impl.combat.AimAssistModule;
 import net.anubis.client.module.impl.combat.AnchorAuraModule;
 import net.anubis.client.module.impl.combat.AutoCityModule;
@@ -47,7 +46,6 @@ import net.anubis.client.module.impl.misc.AutoReplenishModule;
 import net.anubis.client.module.impl.misc.BlockNotifierModule;
 import net.anubis.client.module.impl.misc.ChatMacroModule;
 import net.anubis.client.module.impl.misc.CoordSnapperModule;
-import net.anubis.client.module.impl.misc.DiscordPresenceModule;
 import net.anubis.client.module.impl.misc.DonutNoFallModule;
 import net.anubis.client.module.impl.misc.FakeStats;
 import net.anubis.client.module.impl.misc.FastUseModule;
@@ -259,13 +257,11 @@ public final class BuiltinModuleProvider implements ModuleProvider {
          new TimeChangerModule(),
          new LowHealthWarningModule(),
          new HudModule(),
-         new SpotifyHudModule(),
          new RegionMapModule(),
          new RadarModule(),
          new HotkeysModule(),
          new TracersModule(),
          new PerformanceModule(),
-         new DiscordPresenceModule(),
          new AutoTpaHereModule(),
          new OrderAhSellerModule(),
          new AhSellModule(),
