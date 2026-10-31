@@ -23,22 +23,12 @@ public final class MenuIcons {
          case MODS:
             folder(dl, cx, cy, r, color, th);
             break;
-         case ACCOUNTS:
-            person(dl, cx, cy, r, color, th);
-            break;
          case CREDITS:
             scroll(dl, cx, cy, r, color, th);
             break;
          default:
             dl.addCircleFilled(cx, cy, r * 0.25F, color, 12);
       }
-   }
-
-   public static void person(ImDrawList dl, float cx, float cy, float r, int color, float th) {
-      dl.addCircle(cx, cy - r * 0.38F, r * 0.42F, color, 24, th);
-      dl.pathClear();
-      dl.pathArcTo(cx, cy + r * 0.95F, r * 0.82F, (float) Math.PI, (float) (Math.PI * 2), 20);
-      dl.pathStroke(color, 0, th);
    }
 
    public static void ankh(ImDrawList dl, float cx, float cy, float r, int color, float th) {
